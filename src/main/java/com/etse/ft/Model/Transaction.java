@@ -1,12 +1,14 @@
 package com.etse.ft.Model;
 
-import org.springframework.data.annotation.Id;
-
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Entity
 public class Transaction{
+    @Id
     Long id;
     String type;
     BigDecimal amount;

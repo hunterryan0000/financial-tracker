@@ -1,5 +1,7 @@
 package com.etse.ft.Model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 /**
@@ -7,9 +9,14 @@ import java.util.Objects;
  *
  * Contains the name of the role. Note that this begins with "ROLE_" in all caps.
  */
+@Entity // Marks this class as a JPA entity
 public class Authority {
 
+   @Id
    private String name;
+
+   public Authority() {
+   }
 
    public String getName() {
       return name;

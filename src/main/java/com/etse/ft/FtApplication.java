@@ -2,11 +2,14 @@ package com.etse.ft;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJdbcRepositories(basePackages = "com.etse.ft.Repository")
+//@EnableJdbcRepositories(basePackages = "com.etse.ft.Repository")
+@ComponentScan(basePackages = {"com.etse.ft"}) // Adjust as needed
+@EnableJpaRepositories(basePackages = {"com.etse.ft.Repository"}) // Make sure this points to your repository package
 @SpringBootApplication
 public class FtApplication {
 

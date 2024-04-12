@@ -1,9 +1,6 @@
 BEGIN TRANSACTION;
 
--- *************************************************************************************************
--- Drop all db objects in the proper order
--- *************************************************************************************************
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS users_authorities, authority, users CASCADE;
 
 
 -- *************************************************************************************************
@@ -11,18 +8,31 @@ DROP TABLE IF EXISTS users CASCADE;
 -- *************************************************************************************************
 
 --users (name is pluralized because 'user' is a SQL keyword)
-CREATE TABLE users (
-	user_id SERIAL,
-	username varchar(50) NOT NULL UNIQUE,
-	password_hash varchar(200) NOT NULL,
-	role varchar(50) NOT NULL,
-	name varchar(50) NOT NULL,
-	address varchar(100) NULL,
-	city varchar(50) NULL,
-	state_code char(2) NULL,
-	zip varchar(5) NULL,
-	CONSTRAINT PK_user PRIMARY KEY (user_id)
+CREATE TABLE IF NOT EXISTS authority (
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (name)
 );
+
+CREATE TABLE IF NOT EXISTS users (
+    user_id BIGINT AUTO_INCREMENT NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(50),
+    state_code CHAR(2),
+    zip CHAR(5),
+    PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS users_authorities (
+    user_id BIGINT NOT NULL,
+    authority_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (user_id, authority_name),
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (authority_name) REFERENCES authority (name)
+);
+
 -- cart item
 --CREATE TABLE cart_item (
 --	cart_item_id SERIAL,
@@ -38,5 +48,5 @@ CREATE TABLE users (
 
 
 --COMMIT TRANSACTION;
--- h2 is:
+-- h2 uses:
 COMMIT;

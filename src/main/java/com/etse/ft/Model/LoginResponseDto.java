@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LoginResponseDto {
 
     private String token;
-    private User user;
+    private Users user;
 
-    public LoginResponseDto(String token, User user) {
+    public LoginResponseDto(String token, Users user) {
         this.token = token;
         this.user = user;
     }
@@ -29,11 +29,11 @@ public class LoginResponseDto {
     }
 
     @JsonProperty("user")
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 }

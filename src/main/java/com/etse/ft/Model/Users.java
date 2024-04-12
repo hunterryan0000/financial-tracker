@@ -2,6 +2,7 @@ package com.etse.ft.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,46 +13,72 @@ import java.util.Set;
  * Contains information about the user - their id, username, address information,
  * password (hashed) and authorities (user roles).
  */
-public class User {
+@Entity
+@Table(name = "users")
+public class Users {
 
-   private int id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "user_id")
+   private Long id;
+   @Column(name = "username", unique = true, nullable = false)
    private String username;
+   @Column(name = "name", nullable = false)
    private String name;
+
+   @Column(name = "address")
    private String address;
+
+   @Column(name = "city")
    private String city;
+
+   @Column(name = "state_code")
    private String stateCode;
+
+   @Column(name = "zip")
    private String ZIP;
+
    @JsonIgnore
+   @Column(name = "password_hash", nullable = false)
    private String password;
+
    @JsonIgnore
-   private boolean activated;
+   @Column(name = "activated")
+   @Transient
+   private boolean activated = true;
+
+   @ManyToMany(fetch = FetchType.LAZY) // Use LAZY fetching strategy by default
+   @JoinTable(
+           name = "users_authorities", // Define the join table that maps the association
+           joinColumns = @JoinColumn(name = "user_id"), // Column linking to the Users entity primary key
+           inverseJoinColumns = @JoinColumn(name = "authority_name") // Column linking to the Authority entity primary key
+   )
    private Set<Authority> authorities = new HashSet<>();
 
-   public User() { }
+   public Users() { }
 
 
-   public User(int id, String username, String password, String authorities, String name, String address, String city, String stateCode, String ZIP) {
+   public Users(Long id, String username, String password, String name, String address, String city, String stateCode, String ZIP) {
       this.id = id;
       this.username = username;
-      this.password = password;
-      if(authorities != null) this.setAuthorities(authorities);
+      this.password = password; // Note: password should be encrypted outside of the constructor
       this.name = name;
       this.address = address;
       this.city = city;
       this.stateCode = stateCode;
       this.ZIP = ZIP;
-      this.activated = true;
+      this.activated = true; // Depending on your business logic, this could be handled differently
    }
 
-   public User(String username, String password, String authorities, String name, String address, String city, String stateCode, String ZIP) {
-      this(0, username, password, authorities, name, address, city, stateCode, ZIP);
+   public Users(String username, String password, String name, String address, String city, String stateCode, String ZIP) {
+      this(0L, username, password, name, address, city, stateCode, ZIP);
    }
 
-   public int getId() {
+   public Long getId() {
       return id;
    }
 
-   public void setId(int id) {
+   public void setId(Long id) {
       this.id = id;
    }
 
@@ -95,16 +122,12 @@ public class User {
       return authString;
    }
 
+//   public void setAuthorities(Set<Authority> authorities) {
+//      this.authorities = authorities;
+//   }
+
    public void setAuthorities(Set<Authority> authorities) {
       this.authorities = authorities;
-   }
-
-   public void setAuthorities(String authorities) {
-      String[] roles = authorities.split(",");
-      for(String role : roles) {
-         String authority = role.contains("ROLE_") ? role : "ROLE_" + role.toUpperCase();
-         this.authorities.add(new Authority(authority));
-      }
    }
 
    public String getName() {
@@ -151,7 +174,7 @@ public class User {
    public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      User user = (User) o;
+      Users user = (Users) o;
       return id == user.id &&
               activated == user.activated &&
               Objects.equals(username, user.username) &&

@@ -2,10 +2,13 @@ package com.etse.ft.Controller;
 
 import com.etse.ft.Model.Transaction;
 import com.etse.ft.Service.TransactionService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transactions")
+@CrossOrigin
+@PreAuthorize("isAuthenticated()")
 public class TransactionController {
     private final TransactionService service;
 
