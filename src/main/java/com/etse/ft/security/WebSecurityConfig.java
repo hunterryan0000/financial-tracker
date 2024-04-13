@@ -67,23 +67,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                // Disable CSRF (Cross-Site Request Forgery) protection as JWT is used, which is inherently protected against CSRF.
+                // Permit all requests to the H2 console and authentication paths without authentication
+                .authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()  // Allow everyone to access H2 console
+                .antMatchers("/login", "/register").permitAll() // Allow everyone to access authentication paths
+                .anyRequest().authenticated() // All other requests need to be authenticated
+
+                // Disable CSRF (Cross-Site Request Forgery) as JWT is used
+                .and()
                 .csrf().disable()
 
-                // Configure exception handling for unauthenticated requests and access denied situations.
+                // Configure exception handling for unauthenticated requests and access denied situations
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
-                // Configure Spring Security to not create or use any session.
+                // Configure Spring Security to not create or use any session
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // Apply additional JWT security configurations.
+                // Apply additional JWT security configurations
                 .and()
-                .apply(securityConfigurerAdapter());
+                .apply(securityConfigurerAdapter())
+
+                // Allow use of frame to same origin URLs (necessary for H2 console)
+                .and()
+                .headers().frameOptions().sameOrigin();
     }
+
+//    @Override
+//    protected void configure(HttpSecurity httpSecurity) throws Exception {
+//        httpSecurity
+//                // Disable CSRF (Cross-Site Request Forgery) protection as JWT is used, which is inherently protected against CSRF.
+//                .csrf().disable()
+//
+//
+//                // Configure exception handling for unauthenticated requests and access denied situations.
+//                .exceptionHandling()
+//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .accessDeniedHandler(jwtAccessDeniedHandler)
+//
+//                // Configure Spring Security to not create or use any session.
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//
+//                // Apply additional JWT security configurations.
+//                .and()
+//                .apply(securityConfigurerAdapter());
+//
+//
+//    }
 
     // Helper method to initialize and return the JWTConfigurer, which integrates the TokenProvider with Spring Security.
     private JWTConfigurer securityConfigurerAdapter() {
