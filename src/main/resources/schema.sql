@@ -1,6 +1,6 @@
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS users_authorities, authority, users CASCADE;
+DROP TABLE IF EXISTS users_authorities, authority, users, transactions CASCADE;
 
 
 -- *************************************************************************************************
@@ -33,17 +33,17 @@ CREATE TABLE IF NOT EXISTS users_authorities (
     FOREIGN KEY (authority_name) REFERENCES authority (name)
 );
 
--- cart item
---CREATE TABLE cart_item (
---	cart_item_id SERIAL,
---	user_id int NOT NULL,
---	product_id int NOT NULL,
---	quantity int NOT NULL DEFAULT(1),
---	CONSTRAINT PK_cart_item PRIMARY KEY (cart_item_id),
---	CONSTRAINT FK_user FOREIGN KEY (user_id) REFERENCES users(user_id),
---	CONSTRAINT FK_cart_item_product FOREIGN KEY (product_id) REFERENCES product(product_id)
---);
---CREATE UNIQUE INDEX IX_cart_item_user_product ON cart_item(user_id, product_id);
+CREATE TABLE IF NOT EXISTS transactions (
+    transaction_id BIGINT AUTO_INCREMENT NOT NULL,
+    user_id BIGINT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    amount DECIMAL(6,2) NOT NULL,
+    category VARCHAR(50),
+    the_date DATE,
+    CONSTRAINT PK_transaction_id PRIMARY KEY (transaction_id),
+    CONSTRAINT FK_user FOREIGN KEY (user_id) REFERENCES users(user_id),
+    CONSTRAINT type_check CHECK (type IN ('income', 'expense'))
+);
 
 
 

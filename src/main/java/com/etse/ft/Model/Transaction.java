@@ -1,19 +1,45 @@
 package com.etse.ft.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class Transaction{
+@Table(name = "transactions")
+public class Transaction {
     @Id
-    Long id;
-    String type;
-    BigDecimal amount;
-    String category;
-    LocalDate date;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "transaction_id")
+    private Long id;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @Column(name = "type", nullable = false)
+    private String type;
+
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "the_date", nullable = false)
+    private LocalDate date = LocalDate.now(); // Default to today's date
+
+    public Transaction() {
+        // Default constructor
+    }
+
+    // Constructor for all fields
+    public Transaction(Long userId, String type, BigDecimal amount, String category) {
+        this.userId = userId;
+        setType(type); // Ensure type is valid upon creation
+        this.amount = amount;
+        this.category = category;
+        this.date = LocalDate.now(); // Set date to now on creation
+    }
 
     public Long getId() {
         return id;
@@ -23,12 +49,16 @@ public class Transaction{
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public BigDecimal getAmount() {
@@ -55,27 +85,12 @@ public class Transaction{
         this.date = date;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Transaction)) return false;
-        Transaction that = (Transaction) o;
-        return getId().equals(that.getId()) && Objects.equals(getType(), that.getType()) && getAmount().equals(that.getAmount()) && Objects.equals(getCategory(), that.getCategory()) && getDate().equals(that.getDate());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getType(), getAmount(), getCategory(), getDate());
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                ", amount=" + amount +
-                ", category='" + category + '\'' +
-                ", date=" + date +
-                '}';
+    // Ensure the type is either "income" or "expense"
+    public void setType(String type) {
+        if (!type.equalsIgnoreCase("income") && !type.equalsIgnoreCase("expense")) {
+            throw new IllegalArgumentException("Type must be either 'income' or 'expense'");
+        }
+        this.type = type;
     }
 }
+
