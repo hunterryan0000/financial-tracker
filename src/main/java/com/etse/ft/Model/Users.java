@@ -122,9 +122,6 @@ public class Users {
       return authString;
    }
 
-//   public void setAuthorities(Set<Authority> authorities) {
-//      this.authorities = authorities;
-//   }
 
    public void setAuthorities(Set<Authority> authorities) {
       this.authorities = authorities;

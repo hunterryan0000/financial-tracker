@@ -23,8 +23,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Optional<Transaction> findByIdAndUserId(Long id, Long userId);
 
     // Custom query to delete a transaction by ID and user ID
-    @Modifying
-    @Transactional
+    @Modifying //meaning any operation that involves updates, deletes, or even native INSERT commands. By default, @Query assumes the operation is a SELECT operation, so this annotation modifies that behavior.
+    @Transactional //ensures that the operation is part of a transaction and thus can be rolled back if part of the operation fails, maintaining data integrity.
     @Query("DELETE FROM Transaction t WHERE t.id = :transactionId AND t.userId = :userId")
     void deleteByIdAndUserId(@Param("userId") Long userId, @Param("transactionId") Long transactionId);
 }

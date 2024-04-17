@@ -7,12 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
-//@EnableJdbcRepositories(basePackages = "com.etse.ft.Repository")
-@ComponentScan(basePackages = {"com.etse.ft"}) // Adjust as needed
+@Configuration //can be used by the Spring IoC container as a source of bean definitions.
+@ComponentScan(basePackages = {"com.etse.ft"}) // enables Spring to find and register all the components
 @EnableJpaRepositories(basePackages = {"com.etse.ft.Repository"}) // Make sure this points to your repository package
-@SpringBootApplication
-@EnableTransactionManagement
+@SpringBootApplication //provides a simple way to start up a Spring application context.
+@EnableTransactionManagement //Place it on a configuration class to have Spring manage transactions
 public class FtApplication {
 
 	public static void main(String[] args) {

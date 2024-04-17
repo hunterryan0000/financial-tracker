@@ -7,12 +7,13 @@ DROP TABLE IF EXISTS users_authorities, authority, users, transactions CASCADE;
 -- Create the tables and constraints
 -- *************************************************************************************************
 
---users (name is pluralized because 'user' is a SQL keyword)
+
 CREATE TABLE IF NOT EXISTS authority (
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY (name)
 );
 
+--users (name is pluralized because 'user' is a SQL keyword)
 CREATE TABLE IF NOT EXISTS users (
     user_id BIGINT AUTO_INCREMENT NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -25,6 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY (user_id)
 );
 
+-- join/junction table
 CREATE TABLE IF NOT EXISTS users_authorities (
     user_id BIGINT NOT NULL,
     authority_name VARCHAR(50) NOT NULL,

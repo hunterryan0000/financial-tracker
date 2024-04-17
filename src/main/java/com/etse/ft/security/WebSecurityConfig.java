@@ -96,29 +96,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().sameOrigin();
     }
 
-//    @Override
-//    protected void configure(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                // Disable CSRF (Cross-Site Request Forgery) protection as JWT is used, which is inherently protected against CSRF.
-//                .csrf().disable()
-//
-//
-//                // Configure exception handling for unauthenticated requests and access denied situations.
-//                .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .accessDeniedHandler(jwtAccessDeniedHandler)
-//
-//                // Configure Spring Security to not create or use any session.
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//
-//                // Apply additional JWT security configurations.
-//                .and()
-//                .apply(securityConfigurerAdapter());
-//
-//
-//    }
 
     // Helper method to initialize and return the JWTConfigurer, which integrates the TokenProvider with Spring Security.
     private JWTConfigurer securityConfigurerAdapter() {
